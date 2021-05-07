@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/screens/home.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:location/service/locationService.dart';
+import 'package:location/service/user_service.dart';
 
 void main() {
-  // runApp(MyApp());
-  runApp(HomeScreen());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, this.title}) : super(key: key);
+  MyHomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -41,7 +42,7 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String? title;
+  final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -61,6 +62,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Position _currentPosition;
+
+  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -73,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title!),
+        title: Text(widget.title),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -95,13 +100,20 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            TextButton(
+                onPressed: () {
+                  geolocator
+                      .getCurrentPosition(
+                          desiredAccuracy: LocationAccuracy.best)
+                      .then((Position position) => setState(() {
+                            _currentPosition = position;
+                          }));
+                  print(_currentPosition);
+                  // UserService().registerUser();
+                  LocationService().sendLocation(
+                      _currentPosition.latitude, _currentPosition.longitude);
+                },
+                child: Text("get Location"))
           ],
         ),
       ),
