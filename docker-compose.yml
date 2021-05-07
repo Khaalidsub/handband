@@ -1,0 +1,29 @@
+version: '3.3'
+services:
+    nginx:
+      image: 'nginx'
+      build:
+        context: ./nginx
+        dockerfile: ./Dockerfile
+      container_name: handband-nginx
+      volumes:
+        - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        - ~/etc/letsencrypt:/etc/letsencrypt
+      ports:
+        - 80:80
+        - 443:443
+      depends_on:
+        - api
+    api:
+      build:
+        context: ./packages/server
+        dockerfile: Dockerfile
+      container_name: handband-api
+      depends_on: 
+        - mongodb
+    mongodb:
+        image: 'mongo:4.4'
+        container_name: handband-database
+        
+
+
