@@ -1,1 +1,4 @@
-export class CreateLocationDto {}
+export class CreateLocationDto {
+    latitude: number
+    longitude: number
+}

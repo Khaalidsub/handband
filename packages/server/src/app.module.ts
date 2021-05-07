@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { BandModule } from './band/band.module';
 import { UsersModule } from './users/users.module';
 import { LocationsModule } from './locations/locations.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [AuthModule, BandModule, UsersModule, LocationsModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    
+  MongooseModule.forRoot('mongodb://mongodb:27017/handband'),
+    AuthModule, UsersModule, LocationsModule],
 })
 export class AppModule {}
